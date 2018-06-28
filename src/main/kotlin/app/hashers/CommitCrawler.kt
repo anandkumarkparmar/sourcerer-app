@@ -4,6 +4,7 @@
 package app.hashers
 
 import app.Logger
+//import app.hashers.VendorConventions
 import app.model.Author
 import app.model.Commit
 import app.model.DiffContent
@@ -167,6 +168,12 @@ object CommitCrawler {
             }
             .filter { diff ->
                 val path = diff.newPath
+                for (cnv in VendorConventions) {
+                    if (cnv.containsMatchIn(path)) {
+                        println("MATHCED: $path")
+                        return@filter false
+                    }
+                }
 
                 val fileId =
                     if (path != DiffEntry.DEV_NULL) {
