@@ -100,8 +100,7 @@ object CommitCrawler {
     fun getJGitObservable(git: Git,
                           totalCommitCount: Int = 0,
                           filteredEmails: HashSet<String>? = null,
-                          tail : RevCommit? = null,
-                          allowedExts: HashSet<String>? = null) :
+                          tail : RevCommit? = null) :
         Observable<JgitPair> = Observable.create { subscriber ->
         val repo: Repository = git.repository
         val revWalk = RevWalk(repo)
@@ -168,10 +167,6 @@ object CommitCrawler {
             }
             .filter { diff ->
                 val path = diff.newPath
-                val ext = FileHelper.getFileExtension(path)
-                if (allowedExts != null && !allowedExts.contains(ext)) {
-                    return@filter false
-                }
 
                 val fileId =
                     if (path != DiffEntry.DEV_NULL) {
